@@ -1,8 +1,8 @@
 const db = require('../config/db');
 
 class InventoryRepository {
-  async getAllProducts() {
-    const [rows] = await db.query('SELECT * FROM products');
+  async getAllProducts(userId) {
+    const [rows] = await db.query('SELECT * FROM products WHERE user_id = ?', [userId]);
     return rows;
   }
 
@@ -21,20 +21,20 @@ class InventoryRepository {
       await db.query('UPDATE products SET seo_description = ? WHERE id = ?', [seoText, productId]);
   }
 
-  async createProduct(product) {
+  async createProduct(product, userId) {
     const { supplier_id, name, sku, description, price, current_stock, min_threshold } = product;
     const [result] = await db.query(
-      `INSERT INTO products (supplier_id, name, sku, description, price, current_stock, min_threshold)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [supplier_id, name, sku, description, price, current_stock, min_threshold]
+      `INSERT INTO products (supplier_id, name, sku, description, price, current_stock, min_threshold, user_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [supplier_id, name, sku, description, price, current_stock, min_threshold, userId]
     );
     return result.insertId;
   }
 
-  async addSaleRecord(productId, quantity) {
+  async addSaleRecord(productId, quantity, userId) {
     await db.query(
-      'INSERT INTO sales_history (product_id, quantity_sold, sale_date) VALUES (?, ?, date("now"))',
-      [productId, quantity]
+      'INSERT INTO sales_history (product_id, quantity_sold, sale_date, user_id) VALUES (?, ?, date("now"), ?)',
+      [productId, quantity, userId]
     );
   }
 

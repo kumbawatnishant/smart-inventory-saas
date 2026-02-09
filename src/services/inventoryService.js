@@ -2,8 +2,8 @@ const inventoryRepo = require('../repositories/inventoryRepository');
 const aiService = require('./aiService');
 
 class InventoryService {
-  async getInventoryAnalytics() {
-    const products = await inventoryRepo.getAllProducts();
+  async getInventoryAnalytics(userId) {
+    const products = await inventoryRepo.getAllProducts(userId);
     
     // Process each product to calculate metrics
     const analyticsData = await Promise.all(products.map(async (product) => {
@@ -40,8 +40,8 @@ class InventoryService {
     return analyticsData;
   }
 
-  async generateProductSeo(productId) {
-    const products = await inventoryRepo.getAllProducts();
+  async generateProductSeo(productId, userId) {
+    const products = await inventoryRepo.getAllProducts(userId);
     const product = products.find(p => p.id == productId);
     
     if (!product) throw new Error("Product not found");
@@ -52,13 +52,13 @@ class InventoryService {
     return aiResult;
   }
 
-  async addProduct(productData) {
+  async addProduct(productData, userId) {
     // In a real app, you might validate SKU uniqueness here before calling repo
-    return await inventoryRepo.createProduct(productData);
+    return await inventoryRepo.createProduct(productData, userId);
   }
 
-  async recordSale(productId, quantity) {
-    await inventoryRepo.addSaleRecord(productId, quantity);
+  async recordSale(productId, quantity, userId) {
+    await inventoryRepo.addSaleRecord(productId, quantity, userId);
     await inventoryRepo.updateStock(productId, -quantity);
   }
 }
