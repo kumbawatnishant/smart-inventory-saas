@@ -90,4 +90,8 @@ async function setup() {
   }
 }
 
-setup();
+if (require.main === module) {
+  setup();
+}
+
+module.exports = setup;

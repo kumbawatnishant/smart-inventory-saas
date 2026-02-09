@@ -6,6 +6,7 @@ require('dotenv').config();
 // Assumes your files are organized in a 'src' folder structure as implied by your relative imports (e.g., ../controllers)
 const analyticsRoutes = require('./src/routes/analyticsRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+const setupDb = require('./setup_db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,8 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api', analyticsRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+setupDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
 });
