@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Package, TrendingUp, BrainCircuit, Sparkles, Plus, X, ShoppingCart, FileText } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://smart-inventory-saas.onrender.com';
 
 const Dashboard = ({ token }) => {
   const [inventory, setInventory] = useState([]);
