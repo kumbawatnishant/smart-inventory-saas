@@ -1,4 +1,21 @@
 {
+  "name": "smart-inventory-saas",
+  "version": "1.0.0",
+  "description": "AI-powered inventory management system with stock prediction and SEO generation.",
+  "main": "server.js",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": [
+    "inventory",
+    "ai",
+    "saas",
+    "react",
+    "nodejs",
+    "groq"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "vite",

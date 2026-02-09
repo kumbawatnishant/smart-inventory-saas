@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Package, TrendingUp, BrainCircuit, Sparkles, Plus, X, ShoppingCart, FileText } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 const Dashboard = ({ token }) => {
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +13,7 @@ const Dashboard = ({ token }) => {
 
   const fetchInventory = () => {
     // In a real app, use an env variable for the API URL
-    fetch('http://localhost:3000/api/analytics', {
+    fetch(`${API_URL}/api/analytics`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -30,7 +32,7 @@ const Dashboard = ({ token }) => {
 
   const handleGenerateSeo = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/products/${id}/seo`, { 
+      const res = await fetch(`${API_URL}/api/products/${id}/seo`, { 
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -50,7 +52,7 @@ const Dashboard = ({ token }) => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/api/products', {
+      const res = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -70,7 +72,7 @@ const Dashboard = ({ token }) => {
 
   const handleRecordSale = async (id) => {
     try {
-      const res = await fetch('http://localhost:3000/api/sales', {
+      const res = await fetch(`${API_URL}/api/sales`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
