@@ -1,0 +1,8 @@
+node_modules/
+.env
+inventory.sqlite
+.DS_Store
+dist/
+.vscode/
+coverage/
+*.log
