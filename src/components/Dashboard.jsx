@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "@clerk/clerk-react";
-import { AlertTriangle, Package, TrendingUp, BrainCircuit, Sparkles, Plus, X, ShoppingCart, FileText } from 'lucide-react';
+import { AlertTriangle, Package, TrendingUp, BrainCircuit, Sparkles, Plus, X, ShoppingCart, FileText, Lock } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://smart-inventory-saas.onrender.com';
 
 const Dashboard = () => {
   const { getToken } = useAuth();
+  const [isPro, setIsPro] = useState(false);
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -21,7 +22,8 @@ const Dashboard = () => {
     })
       .then(res => res.json())
       .then(response => {
-        setInventory(response.data);
+        setInventory(response.data.products);
+        setIsPro(response.data.isPro);
         setLoading(false);
       })
       .catch(err => console.error("Failed to fetch data", err));
@@ -183,7 +185,12 @@ const Dashboard = () => {
                     </span>
                   </td>
                   <td className="p-4">
-                    {item.ai_insight ? (
+                    {!isPro && item.status === 'CRITICAL' ? (
+                      <div className="flex items-center gap-2 text-gray-400 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <Lock size={16} />
+                        <span className="text-xs font-medium">Pro Feature</span>
+                      </div>
+                    ) : item.ai_insight ? (
                       <div className="bg-indigo-50 p-3 rounded-lg border border-indigo-100">
                         <p className="text-xs font-bold text-indigo-700 mb-1">
                           AI: {item.ai_insight.recommendation}
@@ -210,7 +217,11 @@ const Dashboard = () => {
                               {item.seo_description}
                             </div>
                           </div>
-                        ) : (
+                        ) : !isPro ? (
+                          <button className="p-1 text-gray-300 cursor-not-allowed" title="Upgrade to Pro to use AI">
+                             <Lock size={16} />
+                          </button>
+                        ) : ( 
                           <button 
                             onClick={() => handleGenerateSeo(item.id)}
                             className="p-1 hover:bg-indigo-50 rounded text-indigo-600 transition-colors"

@@ -24,7 +24,7 @@ async function setup() {
     console.log('⚙️  Running schema...');
     await db.exec(schemaSql);
     console.log('✅ Database schema applied.');
-
+    
     // Check if products already exist
     const result = await db.get('SELECT count(*) as count FROM products');
     if (result.count > 0) {

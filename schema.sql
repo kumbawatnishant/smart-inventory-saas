@@ -43,3 +43,10 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 5. User Subscriptions (For Whop/Stripe Gating)
+CREATE TABLE IF NOT EXISTS user_subscriptions (
+    user_id TEXT PRIMARY KEY,
+    is_pro INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

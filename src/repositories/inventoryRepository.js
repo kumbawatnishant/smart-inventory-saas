@@ -44,6 +44,11 @@ class InventoryRepository {
       [quantityChange, productId]
     );
   }
+
+  async getUserSubscription(userId) {
+    const [rows] = await db.query('SELECT is_pro FROM user_subscriptions WHERE user_id = ?', [userId]);
+    return rows[0] || { is_pro: 0 };
+  }
 }
 
 module.exports = new InventoryRepository();

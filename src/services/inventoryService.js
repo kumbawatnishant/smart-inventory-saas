@@ -3,6 +3,8 @@ const aiService = require('./aiService');
 
 class InventoryService {
   async getInventoryAnalytics(userId) {
+    const subscription = await inventoryRepo.getUserSubscription(userId);
+    const isPro = Boolean(subscription.is_pro);
     const products = await inventoryRepo.getAllProducts(userId);
     
     // Process each product to calculate metrics
@@ -19,7 +21,7 @@ class InventoryService {
 
       // If stock is critical, fetch AI insights (Optimization: Only call AI for critical items)
       let aiInsight = null;
-      if (product.current_stock <= product.min_threshold) {
+      if (isPro && product.current_stock <= product.min_threshold) {
          aiInsight = await aiService.generateStockStrategy(product.name, product.current_stock, ads);
       }
 
@@ -37,10 +39,15 @@ class InventoryService {
       };
     }));
 
-    return analyticsData;
+    return { products: analyticsData, isPro };
   }
 
   async generateProductSeo(productId, userId) {
+    const subscription = await inventoryRepo.getUserSubscription(userId);
+    if (!subscription.is_pro) {
+      throw new Error("Upgrade to Pro to use AI SEO features.");
+    }
+
     const products = await inventoryRepo.getAllProducts(userId);
     const product = products.find(p => p.id == productId);
     
