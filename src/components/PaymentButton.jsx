@@ -1,22 +1,25 @@
 import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { CreditCard } from 'lucide-react';
+import { useAuth } from "@clerk/clerk-react";
 
 // Initialize Stripe with your Publishable Key from .env
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const PaymentButton = () => {
+  const { getToken } = useAuth();
+
   const handleCheckout = async () => {
     try {
       const stripe = await stripePromise;
+      const token = await getToken();
 
       // Call your backend to create a checkout session
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Include auth token here if using Clerk/JWT
-          'Authorization': `Bearer ${localStorage.getItem('token')}` 
+          'Authorization': `Bearer ${token}` 
         },
       });
 

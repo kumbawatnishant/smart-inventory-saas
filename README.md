@@ -83,5 +83,18 @@ npm run dev
 
 ---
 
-## 📄 License
+## 🚀 Deployment Configuration
+
+**Important:** After deployment, remember to add the following Environment Variables in your Render and Vercel dashboards if you plan to use the new features fully:
+
+- **Render (Backend):**
+  - `CLERK_SECRET_KEY`
+  - `STRIPE_SECRET_KEY`
+
+- **Vercel (Frontend):**
+  - `VITE_STRIPE_PUBLISHABLE_KEY`
+
+---
+
+## � License
 MIT

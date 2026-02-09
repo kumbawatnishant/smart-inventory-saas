@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from "@clerk/clerk-react";
 import { AlertTriangle, Package, TrendingUp, BrainCircuit, Sparkles, Plus, X, ShoppingCart, FileText } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://smart-inventory-saas.onrender.com';
 
-const Dashboard = ({ token }) => {
+const Dashboard = () => {
+  const { getToken } = useAuth();
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -11,8 +13,9 @@ const Dashboard = ({ token }) => {
     name: '', sku: '', price: '', current_stock: '', min_threshold: '', supplier_id: 1
   });
 
-  const fetchInventory = () => {
+  const fetchInventory = async () => {
     // In a real app, use an env variable for the API URL
+    const token = await getToken();
     fetch(`${API_URL}/api/analytics`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
@@ -32,6 +35,7 @@ const Dashboard = ({ token }) => {
 
   const handleGenerateSeo = async (id) => {
     try {
+      const token = await getToken();
       const res = await fetch(`${API_URL}/api/products/${id}/seo`, { 
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
@@ -52,6 +56,7 @@ const Dashboard = ({ token }) => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
+      const token = await getToken();
       const res = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: { 
@@ -72,6 +77,7 @@ const Dashboard = ({ token }) => {
 
   const handleRecordSale = async (id) => {
     try {
+      const token = await getToken();
       const res = await fetch(`${API_URL}/api/sales`, {
         method: 'POST',
         headers: { 

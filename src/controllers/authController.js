@@ -24,6 +24,27 @@ class AuthController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
+
+  async register(req, res) {
+    try {
+      const { username, password } = req.body;
+
+      // Check if user exists
+      const [users] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+      if (users.length > 0) {
+        return res.status(400).json({ success: false, message: 'Username already exists' });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const [result] = await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+
+      // Generate Token
+      const token = jwt.sign({ id: result.insertId, username }, SECRET_KEY, { expiresIn: '24h' });
+      res.status(201).json({ success: true, token });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
 }
 
 module.exports = new AuthController();
